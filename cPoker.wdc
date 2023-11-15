@@ -1,0 +1,322 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : cPoker
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x3d87322b622cda6d
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      
+      cPoker est une classe
+      	hérite de cJeuCarte
+      Fin
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 4433567519277111927
+     type_code : 27
+     code : |1+
+      Procédure Constructeur(_Fenêtre,_NomImage)
+      
+      Constructeur cJeuCarte(_Fenêtre,_NomImage)
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 4433567520450861687
+     type_code : 28
+     code : |1+
+      Procédure Destructeur()
+      
+     type : 655360
+   -
+     name : Analyse
+     procedure_id : 4433568258095347567
+     type_code : 12
+     code : |1+
+      Procédure Analyse()
+      //Il faut analyser le résultat contenu dans tabJeu.
+      //On regarde si c'est :
+      //Tri du jeu
+      :TrieJeu()
+      //Quinte Flush Royale : Les cinq cartes doivent être de la même couleur ET se suivent ET la suite doit commencer par un As. (X10)
+      si :QuinteFlushRoyale() alors renvoyer 10
+      //Quinte Flush : Les cinq cartes se suivent et de la même couleur. (X8)
+      si :QuinteFlush() alors renvoyer 8
+      //Carré : Quatre cartes de la même valeur. (X7)
+      Si :Carre() alors renvoyer 7
+      //Full : Trois cartes de la même valeur, et deux cartes d'une autre même valeur. (X6)
+      si :Full() alors renvoyer 6
+      //Couleur : Cinq cartes de la même couleur. (X5)
+      SI :Couleur() ALORS RENVOYER 5
+      //Quinte : Cinq cartes qui se suivent. (X4)
+      SI :Suite() ALORS RENVOYER 4
+      //Brelan : Trois cartes de la même valeur. (X3)
+      Si :Brelan() alors renvoyer 3
+      //Deux Paires : Deux groupes de 2 cartes ayant la même valeur. (X2)
+      si :DoublePaire() alors renvoyer  2
+      //Paire : Deux cartes (Valet ou mieux) qui ont la même valeur. (X1)
+      si :Paire() alors renvoyer 1
+      
+      // Aucune combinaison n'existe 
+      renvoyer 0
+     type : 458752
+   -
+     name : QuinteFlush
+     procedure_id : 4433570582736910597
+     type_code : 12
+     code : |1+
+      Procédure QuinteFlush()
+      //Quinte Flush : Les cinq cartes se suivent et de la même couleur. (X8)
+      
+      //Même couleur ?
+      Si :Couleur() alors
+      	//Carte de la même couleur
+      	si :Suite() alors
+      		//Les cartes se suivent, c'est gagné
+      		renvoyer vrai
+      	FIN
+      FIN
+      
+      //Perdu
+      renvoyer faux
+      
+      
+     type : 458752
+   -
+     name : QuinteFlushRoyale
+     procedure_id : 4433570728329165981
+     type_code : 12
+     code : |1-
+      Procédure QuinteFlushRoyale()
+      
+      //Les cinq cartes doivent être de la même couleur ET se suivent ET la suite doit commencer par un As. (X10)
+      
+      //Même couleur ?
+      Si :Couleur() alors
+      	//Même couleur, on continue
+      	//Un AS ?
+      	si :As() alors
+      		//Il y a un As
+      		SI :Suite() alors
+      			//C'est une QuinteFlushRoyale
+      			renvoyer vrai
+      		FIN
+      	fin
+      FIN
+      
+      //Ce n'en est pas une
+      renvoyer faux
+     type : 458752
+   -
+     name : Couleur
+     procedure_id : 4433570977192944350
+     type_code : 12
+     code : |1+
+      Procédure Couleur()
+      //Les 5 cartes sont de même couleur ?
+      
+      i est un entier
+      lCouleur est une chaîne
+      lCouleur = :tabJeu[1]:sCouleurCarte
+      
+      pour i = 2 a 5
+      	//Si couleur <> alors pas de couleur
+      	si lCouleur <> :tabJeu[i]:sCouleurCarte alors renvoyer faux
+      	lCouleur = :tabJeu[i]:sCouleurCarte		
+      FIN
+      
+      //5 cartes de la même couleur
+      renvoyer vrai
+      
+     type : 458752
+   -
+     name : As
+     procedure_id : 4433572088801465328
+     type_code : 12
+     code : |1+
+      Procédure As()
+      //Le jeu contient-il un AS ?
+      
+      i est un entier
+      
+      pour i = 1 à 5
+      	si :tabJeu[i]:nNuméroCarte = 14 alors renvoyer vrai
+      FIN
+      
+      //Aucun AS
+      renvoyer faux
+      
+     type : 458752
+   -
+     name : Suite
+     procedure_id : 4433572690877953895
+     type_code : 12
+     code : |1+
+      Procédure Suite()
+      //Cinq cartes qui se suivent.
+      
+      i est un entier
+      
+      pour i = 1 à 4
+      	si :tabJeu[i]:nNuméroCarte <> :tabJeu[i+1]:nNuméroCarte + 1 alors renvoyer faux
+      FIN
+      
+      //Toutes les cartes se suivent 
+      renvoyer vrai
+     type : 458752
+   -
+     name : Carré
+     procedure_id : 4433573914981929315
+     type_code : 12
+     code : |1+
+      Procédure Carré()
+      //Quatre cartes de la même valeur. (X7)
+      j est un entier
+      
+      pour j = 2 à 14
+      	si :CombienDeCarte(j) = 4 alors renvoyer vrai
+      FIN
+      
+      //Pas de carré 
+      Renvoyer faux
+     type : 458752
+   -
+     name : CombienDeCarte
+     procedure_id : 4433579743234835592
+     type_code : 12
+     code : |1+
+      Procédure CombienDeCarte(_NumCarte)
+      
+      i est un entier
+      NbCarte est un entier
+      
+      Pour i = 1 à 5
+      	Si :tabJeu[i]:nNuméroCarte = _NumCarte alors NbCarte++
+      FIN
+      
+      renvoyer NbCarte
+     type : 458752
+   -
+     name : Full
+     procedure_id : 4433580688427753564
+     type_code : 12
+     code : |1+
+      Procédure Full()
+      //Full : Trois cartes de la même valeur, et deux cartes d'une autre même valeur. (X6)
+      i est un entier
+      bRes est un booleen = faux
+      Carte est un entier 
+      
+      //On cherche 3 cartes pareilles
+      pour i = 2 a 14
+      	si :CombienDeCarte(i) = 3 alors 
+      		bRes = vrai
+      		Carte = i
+      	fin
+      FIN
+      
+      //Si 3 cartes, on cherche la paire qui va avec
+      si bRes alors
+      	pour i = 2 a 14
+      		si i <> Carte alors
+      			si :CombienDeCarte(i)  = 2 alors renvoyer vrai
+      		FIN
+      	FIN
+      FIN
+      
+      //Pas de Full
+      renvoyer faux
+      
+     type : 458752
+   -
+     name : DoublePaire
+     procedure_id : 4433853526745618191
+     type_code : 12
+     code : |1+
+      Procédure DoublePaire()
+      //Deux Paires : Deux groupes de 2 cartes ayant la même valeur. (X2)
+      
+      i est un entier
+      bRes est un booléen = Faux
+      Carte est un entier
+      
+      pour i = 2 à 14
+      	si :CombienDeCarte(i) = 2 alors
+      		//On a une paire
+      		bRes = vrai
+      		Carte = i
+      	fin
+      FIN
+      
+      //Il y a une paire.
+      Si bRes alors 
+      	pour i = 2 à 14
+      		si :CombienDeCarte(i)=2 ALORS
+      			//Il y a une seconde paire <> de la première
+      			si Carte <> i alors renvoyer vrai
+      		fin
+      	fin
+      FIN
+      
+      //Pas de paire
+      renvoyer faux
+      
+      
+     type : 458752
+   -
+     name : Paire
+     procedure_id : 4433854875092312901
+     type_code : 12
+     code : |1+
+      Procédure Paire()
+      //Paire : Deux cartes (Valet ou mieux) qui ont la même valeur. (X1)
+      
+      i est un entier
+      
+      pour i = 11 à 14
+      	si :CombienDeCarte(i)= 2 alors renvoyer vrai	
+      FIN
+      
+      //Pas de Paire
+      renvoyer faux
+      
+      
+      
+     type : 458752
+   -
+     name : Brelan
+     procedure_id : 4433882336804565677
+     type_code : 12
+     code : |1+
+      Procédure Brelan()
+      //Brelan : Trois cartes de la même valeur. (X5)
+      
+      i est un entier
+      
+      Pour i = 2 à 14
+      	si :CombienDeCarte(i) = 3 alors renvoyer vrai
+      FIN
+      
+      //Perdu
+      renvoyer faux
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+resources :
+ string_res :
+  identifier : 0x1fbb8276006f4aaf
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

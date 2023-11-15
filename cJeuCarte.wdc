@@ -1,0 +1,321 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : cJeuCarte
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1550e23201a59581
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  internal_properties : CAAAAAgAAAB7kurEiHgYyvPR2pWRt7OxDCHVnOJZk7IB6keOnlVeK5M+3Tx+lT2My8IXpib1KaKp7lbmf8bAaUa3422CPL9S+EWLJbD/iPOCjo3vi/1E5w==
+  type_code : 10
+  p_codes :
+   -
+     code : |1-
+      carte est une structure
+      	sNom est une chaîne
+      	nNuméroCarte est un entier
+      	sCouleurCarte est une chaine
+      FIN
+      
+      cJeuCarte est une classe
+      	tabCartes 			est un tableau dynamique 	//Jeu de cartes.
+      	tabJeu				est un tableau dynamique	//Jeu distribué
+      	tabBase				est un tableau dynamique	//Copie du jeu pour le retour arrière 
+      	nbCartesRestantes	est un entier				//Nombre de cartes restantes a donner
+      	NumChamp			est un entier				//1 à 5 images
+      	NomChamp			est une chaine				//Nom des champs
+      	NomFenêtre 			EST UNE chaine				//Nom de la fenêtre
+      	bDebut				est un booleen				//Le jeu a commencé
+      	bDebug 				est un booléen				//Permet de débogueur le code
+      fin
+      
+      CONSTANTE
+      	cnNombreCartesVisibles	= 5
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1535976177337275777
+     type_code : 27
+     code : |1+
+      Procédure Constructeur(_Fenêtre,_NomImage)
+      
+      :NomChamp = _NomImage
+      :Nomfenêtre = _Fenêtre
+      :NumChamp = 1
+      :nbCartesRestantes = 32
+      :bDebut = faux
+      :Bdebug = Faux
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1535976177337341313
+     type_code : 28
+     code : |1+
+      Procédure Destructeur()
+      
+     type : 655360
+   -
+     name : TireUneCarte
+     procedure_id : 1535976177337406849
+     type_code : 12
+     code : |1+
+      Procédure TireUneCarte()
+      //Prend une carte au hasard et la pose
+      
+      lValCarte est un entier
+      
+      //Tire une carte
+      lValCarte = hasard(1,:nbCartesRestantes)
+      
+      // Remplit le Tableau de Jeu
+      :AffecteJeu(lValCarte,:NumChamp)
+      
+      // Pose la carte 
+      :PoseCarte(lValCarte,:NumChamp)
+      :NumChamp++
+      
+      // Rétrécit le tableau
+      :SupprimeCarte(lValCarte)
+      
+      // Une carte de moins
+      :nbCartesRestantes--
+     type : 458752
+   -
+     name : InitCartes
+     internal_properties : CAAAAAgAAABm/mJdeGiwXeU5xrMQXSvVOFN6FkSXH8rZ7z1XPqRAmgfPNAbqAq8KWkoT2E5WLSVehTHpHLcfUwqtGzSj/uSiF5TaiU37CA94Jy3sgaW/Tj/lAxJyl/xHrFQiCn9jsP1Kx18uMSJCTmmEzImgPWSJyy8tlCH2NHu/tElNB9k9PaCdZ2hyNFa38Tr5Mg79Jn2dHmlFSxnj9W00dS4CvM8SaI5Om7U0UwQIq9kYiF414VpAFosinsPLRJlqEQ==
+     procedure_id : 1535976177337472385
+     type_code : 12
+     code : |1+
+      Procédure InitCartes()
+      
+      // Initialise les cartes 
+      j EST UN ENTIER
+      l est un entier = 1
+      
+      :tabcartes = allouer un tableau de 52 carte
+      :tabBase = allouer un tableau de cnNombreCartesVisibles carte
+      :tabJeu = allouer un tableau de cnNombreCartesVisibles carte
+      :nbCartesRestantes = 52
+      :NumChamp = 1
+      :bDebut = vrai
+      
+      InitHasard()
+      
+      // Remplissage du tableau
+      // Cœur
+      POUR j = 2 _a_ 14
+      	:tabCartes[l]:sNom = j+"C.png"; :tabCartes[l]:nNuméroCarte = j; :tabCartes[l]:sCouleurCarte ="C"	
+      	l++
+      FIN
+      // Carreau
+      POUR j = 2 _A_ 14
+      	:tabCartes[l]:sNom = j+"Q.png"; :tabCartes[l]:nNuméroCarte = j; :tabCartes[l]:sCouleurCarte ="Q"	
+      	l++
+      FIN
+      // Pique
+      POUR j = 2 _A_ 14
+      	:tabCartes[l]:sNom = j+"P.png"; :tabCartes[l]:nNuméroCarte = j; :tabCartes[l]:sCouleurCarte ="P"
+      	l++
+      FIN
+      // Trèfle
+      POUR j = 2 _A_ 14
+      	:tabCartes[l]:sNom = j+"T.png"; :tabCartes[l]:nNuméroCarte = j; :tabCartes[l]:sCouleurCarte ="T"
+      	l++
+      FIN
+     type : 458752
+   -
+     name : PoseCarte
+     procedure_id : 1535976177337537921
+     type_code : 12
+     code : |1+
+      Procédure PoseCarte(_NumCarte,_NumChamp=0)
+      
+      //Pose la carte dans le champ (cnNombreCartesVisibles champs possibles)
+      {:NomFenêtre+"."+:NomChamp+_NumChamp,indChamp} = :tabCartes[_NumCarte]:sNom
+     type : 458752
+   -
+     name : SupprimeCarte
+     procedure_id : 1535976177337603457
+     type_code : 12
+     code : |1+
+      Procédure SupprimeCarte(_NumCarte)
+      
+      TableauSupprime(:tabCartes,_NumCarte)
+     type : 458752
+   -
+     name : AffecteJeu
+     procedure_id : 1535976177337668993
+     type_code : 12
+     code : |1+
+      Procédure AffecteJeu(_NumCarte,_NumChamp)
+      
+      //Remplit le tableau de jeu
+      :tabJeu[_NumChamp]:sNom = :tabCartes[_NumCarte]:sNom
+      :tabBase[_NumChamp]:sNom = :tabCartes[_NumCarte]:sNom
+      :tabJeu[_NumChamp]:nNuméroCarte = :tabCartes[_NumCarte]:nNuméroCarte
+      :tabBase[_NumChamp]:nNuméroCarte = :tabCartes[_NumCarte]:nNuméroCarte
+      :tabJeu[_NumChamp]:sCouleurCarte = :tabCartes[_NumCarte]:sCouleurCarte
+      :tabBase[_NumChamp]:sCouleurCarte = :tabCartes[_NumCarte]:sCouleurCarte
+      
+      
+     type : 458752
+   -
+     name : Redonne
+     internal_properties : CAAAAAgAAAA/ve1IQDLvbYa66Mpme0QNlSaPoWFI7ERJD3+h9PKoIKRvzd9ub6gHW8zVQgRQHC0w1nAxGU4SMY4srPAJ33iD6gOd8EMVNTElkX7tXX/yIRxyCavA6pp5ZnBE3sPIQoPqxOLgjUaNoSLUq3l6E0Sp/eQU7gnWc6bwdFa9mzgR4Dz1MzaTK3iDzC/unCkR0mqqrg==
+     procedure_id : 1535976177337734529
+     type_code : 12
+     code : |1+
+      Procédure Redonne(_Numéro)
+      //Stocke les cartes du tableau a changer
+      //Si l'élément est vide, on le remplit 
+      //sinon on le vide
+      
+      si :bDebut ALORS
+      	//On vérifie que le jeu ait commencé
+      	si :tabJeu[_Numéro]:sNom = "" alors
+      		//Remet la valeur précédente
+      		:tabJeu[_Numéro]:sNom = :tabBase[_Numéro]:sNom
+      		//Affiche la carte
+      		{:NomFenêtre+"."+:NomChamp+_Numéro,indChamp}= :tabJeu[_Numéro]:sNom
+      	sinon
+      		//Vide l'élément du tableau
+      		:tabJeu[_Numéro]:sNom = ""
+      		//Cache la carte
+      		{:NomFenêtre+"."+:NomChamp+_Numéro,indChamp}= "Dos.png"
+      	
+      	FIN
+      fin
+     type : 458752
+   -
+     name : Change
+     procedure_id : 1535976177337800065
+     type_code : 12
+     code : |1-
+      Procédure Change()
+      //Donne de nouvelles cartes pour les champs vides
+      
+      i est un entier
+      lValCarte est un entier
+      
+      //Plus de changement de carte
+      :bDebut = faux
+      
+      //Parcours du jeu
+      pour i = 1 à 5
+      	si :tabJeu[i]:sNom = "" alors
+      		//Tire une nouvelle carte
+      		//Tire une carte
+      		lValCarte = hasard(1,:nbCartesRestantes)
+      		
+      		//Affectation du tableau
+      		:tabJeu[i]:sNom = :tabCartes[lValCarte]:sNom
+      		:tabJeu[i]:nNuméroCarte = :tabCartes[lValCarte]:nNuméroCarte
+      		:tabJeu[i]:sCouleurCarte = :tabCartes[lValCarte]:sCouleurCarte
+      		
+      		//Affiche la carte
+      		:PoseCarte(lValCarte,i)
+      		
+      		TableauSupprime(:tabCartes,lValCarte)
+      		:nbCartesRestantes--
+      	FIN
+      FIN
+     type : 458752
+   -
+     name : TrieJeu
+     procedure_id : 1535976177337865601
+     type_code : 12
+     code : |1+
+      Procédure TrieJeu()
+      
+      // Trie le jeu
+      i   est un entier
+      j   est un entier
+      Tri est un carte
+      
+      si :bDebug alors :tracetri()
+      pour i = 1 à 4
+      	//Boucle de comparaison
+      	pour j = i+1 à 5
+      		//La valeur suivante est plus grande que la précédente
+      		si :tabJeu[j]:nNuméroCarte > :tabJeu[i]:nNuméroCarte alors
+      			//Il faut échanger les valeurs, en passant par la structure 
+      			//intermédiaire.
+      			Tri:sNom = :tabJeu[i]:snom
+      			Tri:nNuméroCarte = :tabJeu[i]:nNuméroCarte
+      			Tri:sCouleurCarte = :tabJeu[i]:sCouleurCarte
+      			//Affectation de j dans i
+      			:tabJeu[i]:snom = :tabJeu[j]:snom
+      			:tabJeu[i]:nNuméroCarte = :tabJeu[j]:nNuméroCarte
+      			:tabJeu[i]:sCouleurCarte = :tabJeu[j]:sCouleurCarte
+      			//Affectation de Tri dans j
+      			:tabJeu[j]:snom = Tri:sNom
+      			:tabJeu[j]:nNuméroCarte = Tri:nNuméroCarte
+      			:tabJeu[j]:sCouleurCarte = Tri:sCouleurCarte
+      		FIN
+      	FIN
+      FIN
+      
+      //Affiche le tri
+      si :bDebug alors :tracetri()	
+      
+     type : 458752
+   -
+     name : TraceTri
+     procedure_id : 1535976177337931137
+     type_code : 12
+     code : |1+
+      PROCEDURE TraceTri()
+      
+      //Affiche dans une trace le jeu trié.
+      i est un entier
+      
+      POUR i = 1 A cnNombreCartesVisibles
+      	Info(:tabJeu[i]:snom)
+      FIN
+      
+      Info("*********")
+      
+     type : 458752
+   -
+     name : RetourneToutes
+     internal_properties : CAAAAAgAAAB4Svw2ZWTX3ohjJFaqjDZTQjgPUBH7gQoLKD6FYT24LFL1A25IVy/hWa135k/W9PaTfNo5lUZxTXyoY4zjAOiqGdnXGe4zwPefDisnsyaKHMz86+2O3dc3qqukvT658oxL36c7+cIzG7A38GBNy7eXcYInlJvESiC+5/Q9fofobGK7gjzyJYiy7K0RDYEOa9dlKejlXQ==
+     procedure_id : 1562277921377421516
+     type_code : 12
+     code : |1-
+      PROCEDURE RetourneToutes()
+      
+      // Variables locales
+      i est un entier
+      
+      // Est-ce que le jeu est initialisé ?
+      SI tabJeu..Occurrence = 0 alors RENVOYER Faux
+      
+      // On retourne les cartes
+      POUR i = 1 _A_ tabJeu..Occurrence
+      	//Vide l'élément du tableau
+      	:tabJeu[i]:sNom = ""
+      	//Cache la carte
+      	{:NomFenêtre+"."+:NomChamp+i,indChamp}="Dos.png"	
+      FIN
+      
+      RENVOYER Vrai
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : cDistrib
+resources :
+ string_res :
+  identifier : 0x1fbb8276008d4ace
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
